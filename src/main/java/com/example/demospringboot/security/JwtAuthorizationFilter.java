@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,7 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -29,7 +31,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String header = request.getHeader(SecurityConstants.HEADER);
         if (!Strings.isNullOrEmpty(header) && header.startsWith(SecurityConstants.PREFIX)) {
-            System.out.println("Starts to validate JWT token.");
             UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -47,12 +48,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
                 String username = claims.getSubject();
 
-                List<GrantedAuthority> authorities = ((List<?>) claims.get(SecurityConstants.ROLES))
-                        .stream().map(authority -> new SimpleGrantedAuthority((String) authority)).collect(Collectors.toList());
+                Collection<? extends GrantedAuthority> authorities = Arrays.stream(
+                                claims.get(SecurityConstants.ROLES).toString().replace("[", "").replace("]", "").split(","))
+                                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.trim()))
+                                .collect(Collectors.toList());
+
+                System.out.println("JWT represents User '" + username + "' with Role: " + authorities);
+
+                User principal = new User(username, "", authorities);
 
                 if (!Strings.isNullOrEmpty(username)) {
-                    System.out.println("JWT token validated.");
-                    return new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    return new UsernamePasswordAuthenticationToken(principal, "", authorities);
                 }
             } catch (ExpiredJwtException exception) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Request to parse expired JWT : " + token + " failed : " + exception.getMessage());

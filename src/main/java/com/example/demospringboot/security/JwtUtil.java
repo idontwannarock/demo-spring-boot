@@ -6,13 +6,14 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class JwtUtil {
 
     public static String createToken(String accountId, Collection<? extends GrantedAuthority> authorities) {
         return Jwts.builder()
                 .setSubject(accountId)
-                .claim(SecurityConstants.ROLES, authorities)
+                .claim(SecurityConstants.ROLES, authorities.stream().map(Object::toString).collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME * 1000))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET.getBytes())
