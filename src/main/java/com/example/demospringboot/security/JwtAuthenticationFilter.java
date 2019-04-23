@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
-    JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+    JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
 
@@ -53,11 +53,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.trim()))
                                 .collect(Collectors.toList());
 
-                System.out.println("JWT represents User '" + username + "' with Role: " + authorities);
-
                 User principal = new User(username, "", authorities);
 
                 if (!Strings.isNullOrEmpty(username)) {
+                    System.out.println("JWT represents User '" + username + "' with Role: " + authorities);
                     return new UsernamePasswordAuthenticationToken(principal, "", authorities);
                 }
             } catch (ExpiredJwtException exception) {
