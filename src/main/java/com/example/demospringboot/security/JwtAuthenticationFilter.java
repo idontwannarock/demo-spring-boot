@@ -21,16 +21,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+import static com.example.demospringboot.security.SecurityConstants.*;
 
-    JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
+
+    JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String header = request.getHeader(SecurityConstants.HEADER);
-        if (!Strings.isNullOrEmpty(header) && header.startsWith(SecurityConstants.PREFIX)) {
+        String header = request.getHeader(HEADER);
+        if (!Strings.isNullOrEmpty(header) && header.startsWith(PREFIX)) {
             UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -38,26 +40,26 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(SecurityConstants.HEADER);
+        String token = request.getHeader(HEADER);
         if (!Strings.isNullOrEmpty(token)) {
             try {
                 Claims claims = Jwts.parser()
-                        .setSigningKey(SecurityConstants.SECRET.getBytes())
-                        .parseClaimsJws(token.replace(SecurityConstants.PREFIX, ""))
+                        .setSigningKey(SECRET.getBytes())
+                        .parseClaimsJws(token.replace(PREFIX, ""))
                         .getBody();
 
                 String username = claims.getSubject();
 
-                Collection<? extends GrantedAuthority> authorities = Arrays.stream(
-                                claims.get(SecurityConstants.ROLES).toString().replace("[", "").replace("]", "").split(","))
+                Collection<? extends GrantedAuthority> authorities =
+                        Arrays
+                                .stream(claims.get(ROLES).toString().replace("[", "").replace("]", "").split(","))
                                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.trim()))
                                 .collect(Collectors.toList());
-
-                System.out.println("JWT represents User '" + username + "' with Role: " + authorities);
 
                 User principal = new User(username, "", authorities);
 
                 if (!Strings.isNullOrEmpty(username)) {
+                    System.out.println("JWT represents User '" + username + "' with Role: " + authorities);
                     return new UsernamePasswordAuthenticationToken(principal, "", authorities);
                 }
             } catch (ExpiredJwtException exception) {
@@ -66,7 +68,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Request to parse unsupported JWT : " + token + " failed : " + exception.getMessage());
             } catch (MalformedJwtException exception) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Request to parse invalid JWT : " + token + " failed : " + exception.getMessage());
-            } catch (SignatureException exception) {
+            } catch (SecurityException exception) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Request to parse JWT with invalid signature : " + token + " failed : " + exception.getMessage());
             } catch (IllegalArgumentException exception) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Request to parse empty or null JWT : " + token + " failed : " + exception.getMessage());

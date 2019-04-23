@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +30,6 @@ public class HomeController {
     }
 
     @ApiOperation(value = "Hello to a Admin", notes = "Only user with ADMIN authority could access this endpoint.", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @Secured("ROLE_ADMIN")
     @GetMapping("/admin")
     public ResponseEntity<String> helloAdmin() {
         return ResponseEntity.ok("This is the admin area of home running at port: " + environment.getProperty("local.server.port"));
