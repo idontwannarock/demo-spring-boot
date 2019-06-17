@@ -1,1 +1,31 @@
-
+debug: true
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+    jpa:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/spring_boot_sample_jpa?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false
+      username: root
+      password:
+    mybatis:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/spring_boot_sample_mybatis?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false
+      username: root
+      password:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        format_sql: true
+logging:
+  level:
+    com:
+      example:
+        demospringboot:
+          persistence:
+            mapper: debug

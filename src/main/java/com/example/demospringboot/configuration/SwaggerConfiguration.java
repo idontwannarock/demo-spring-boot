@@ -30,7 +30,7 @@ public class SwaggerConfiguration {
     @Bean
     public Docket docket() {
         List<Parameter> parameterList = new ArrayList<>();
-        parameterList.add(new ParameterBuilder().name(SecurityConstants.HEADER).description("Please enter JWT")
+        parameterList.add(new ParameterBuilder().name(SecurityConstants.AUTHORIZATION_HEADER).description("Please enter JWT")
                 .modelRef(new ModelRef("string")).parameterType("header").required(false).build());
 
         return new Docket(DocumentationType.SWAGGER_2)
