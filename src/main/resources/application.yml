@@ -4,10 +4,16 @@ spring:
     ansi:
       enabled: ALWAYS
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/spring_boot_sample?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false
-    username: root
-    password:
+    jpa:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/spring_boot_sample_jpa?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false
+      username: root
+      password:
+    mybatis:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/spring_boot_sample_mybatis?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false
+      username: root
+      password:
   jpa:
     open-in-view: false
     hibernate:
