@@ -33,6 +33,7 @@ public class CustomWebSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/attendance/**").hasAuthority("CREATE_ATTENDANCE")
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/register").permitAll()
                 .antMatchers(HttpMethod.GET, "/home/admin").hasRole("ADMIN")

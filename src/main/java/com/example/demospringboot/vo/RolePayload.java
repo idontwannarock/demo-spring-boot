@@ -57,4 +57,13 @@ public class RolePayload implements Serializable {
             return this.payload;
         }
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("RolePayload{");
+        sb.append("roleId=").append(roleId);
+        sb.append(", roleName='").append(roleName).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

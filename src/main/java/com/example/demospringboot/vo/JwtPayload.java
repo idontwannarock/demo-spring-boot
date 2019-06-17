@@ -42,4 +42,12 @@ public class JwtPayload implements Serializable {
             return this.payload;
         }
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("JwtPayload{");
+        sb.append("jwt='").append(jwt).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -55,4 +55,13 @@ public class PrivilegePayload implements Serializable {
             return this.payload;
         }
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("PrivilegePayload{");
+        sb.append("privilegeId=").append(privilegeId);
+        sb.append(", privilegeName='").append(privilegeName).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }
