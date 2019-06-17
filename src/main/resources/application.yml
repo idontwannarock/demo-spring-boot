@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: #spring.profiles.active#
   output:
     ansi:
       enabled: ALWAYS
