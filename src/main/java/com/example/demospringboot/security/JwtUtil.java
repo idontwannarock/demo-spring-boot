@@ -10,10 +10,11 @@ import static com.example.demospringboot.security.SecurityConstants.*;
 
 public class JwtUtil {
 
-    public static String createToken(String userId, String rolesJson, String privilegesJson) {
+    public static String createToken(String userId, String username, String rolesJson, String privilegesJson) {
         long now = System.currentTimeMillis();
         return BEARER_PREFIX + Jwts.builder()
                 .setSubject(userId)
+                .claim(USERNAME, username)
                 .claim(ROLES, rolesJson)
                 .claim(PRIVILEGES, privilegesJson)
                 .setIssuedAt(new Date(now))

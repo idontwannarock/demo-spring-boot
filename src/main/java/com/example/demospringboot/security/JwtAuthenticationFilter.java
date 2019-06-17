@@ -50,6 +50,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
         // 2. Extract claims
         Long userId = Long.valueOf(claims.getSubject());
+        String username = claims.get(USERNAME, String.class);
         String rolesJson = claims.get(ROLES, String.class);
         String privilegesJson = claims.get(PRIVILEGES, String.class);
 
@@ -59,9 +60,9 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
         // 4. Form principal and authorities
         Set<GrantedAuthority> authorities = Stream.of(roles, privileges).flatMap(Collection::stream).map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
-        UserDto principal = new UserDto(userId, true, true, true, true, authorities);
+        UserDto principal = new UserDto(userId, username, true, true, true, true, authorities);
 
-        System.out.println("JWT represents User '" + userId + "' with Roles: " + authorities);
+        System.out.println("JWT represents User '" + userId + "' with Authorities: " + authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 

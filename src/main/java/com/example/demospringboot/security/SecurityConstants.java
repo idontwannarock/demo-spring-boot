@@ -11,6 +11,7 @@ public class SecurityConstants {
     public static final int EXPIRATION_TIME = 24 * 60 * 60; // 1 day in seconds
 
     // Claim keys
+    public static final String USERNAME = "username";
     public static final String ROLES = "roles";
     public static final String PRIVILEGES = "privileges";
 }

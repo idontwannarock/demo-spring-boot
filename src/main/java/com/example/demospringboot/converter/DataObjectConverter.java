@@ -28,7 +28,7 @@ public class DataObjectConverter {
         String rolesJson = writeValueAsString(roles);
         String privilegesJson = writeValueAsString(privileges);
 
-        return JwtPayload.init().jwt(JwtUtil.createToken(target.getUsername(), rolesJson, privilegesJson)).build();
+        return JwtPayload.init().jwt(JwtUtil.createToken(target.getId().toString(), target.getUsername(), rolesJson, privilegesJson)).build();
     }
 
     private String writeValueAsString(Set<String> set) {

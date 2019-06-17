@@ -18,10 +18,10 @@ public class UserDto extends User {
         this(null, null, null, null, null, null, false, false, false, false, null);
     }
 
-    public UserDto(Long userId,
+    public UserDto(Long userId, String username,
                    boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
                    Set<GrantedAuthority> authorities) {
-        this(userId, "", "", "", Sets.newHashSet(), Sets.newHashSet(), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        this(userId, username, "", "", Sets.newHashSet(), Sets.newHashSet(), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
     public UserDto(Long userId, String username, String password, String email, Set<String> roles, Set<String> privileges,
