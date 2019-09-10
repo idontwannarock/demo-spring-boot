@@ -1,5 +1,6 @@
 package com.example.demospringboot.controller;
 
+import com.example.demospringboot.annotation.ApiVersion;
 import com.example.demospringboot.dto.UserDto;
 import com.example.demospringboot.service.PrivilegeService;
 import com.example.demospringboot.service.RoleService;
@@ -17,6 +18,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.Set;
 
+@ApiVersion
 @Api(tags = "Security")
 @RequestMapping("auth")
 @RestController

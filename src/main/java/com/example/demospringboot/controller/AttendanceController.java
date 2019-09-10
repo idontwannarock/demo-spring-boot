@@ -1,5 +1,6 @@
 package com.example.demospringboot.controller;
 
+import com.example.demospringboot.annotation.ApiVersion;
 import com.example.demospringboot.dto.UserDto;
 import com.example.demospringboot.service.AttendanceService;
 import io.swagger.annotations.Api;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+@ApiVersion
 @Api(tags = "Attendance")
 @RestController
 @RequestMapping("attendance")
