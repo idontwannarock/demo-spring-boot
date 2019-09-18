@@ -2,18 +2,35 @@ package com.example.demospringboot.configuration;
 
 import com.example.demospringboot.annotation.ApiVersion;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.Assert;
 import org.springframework.web.servlet.mvc.condition.*;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class ApiVersionHandlerMapping extends RequestMappingHandlerMapping {
 
-    private final String prefix;
+    @Override
+    protected RequestCondition<?> getCustomTypeCondition(Class<?> handlerType) {
+        ApiVersion apiVersion = AnnotationUtils.findAnnotation(handlerType, ApiVersion.class);
+        return createRequestCondition(apiVersion);
+    }
 
-    public ApiVersionHandlerMapping(String prefix) {
-        this.prefix = prefix;
+    @Override
+    protected RequestCondition<?> getCustomMethodCondition(Method method) {
+        ApiVersion apiVersion = AnnotationUtils.findAnnotation(method, ApiVersion.class);
+        return createRequestCondition(apiVersion);
+    }
+
+    private RequestCondition<ApiVersionCondition> createRequestCondition(ApiVersion apiVersion) {
+        if (Objects.isNull(apiVersion)) {
+            return null;
+        }
+        int value = apiVersion.value();
+        Assert.isTrue(value >= 1, "Api Version Must be greater than or equal to 1");
+        return new ApiVersionCondition(value);
     }
 
     @Override
@@ -34,17 +51,12 @@ public class ApiVersionHandlerMapping extends RequestMappingHandlerMapping {
                 info = createApiVersionInfo(typeAnnotation, typeCondition).combine(info);
             }
         }
-
         return info;
     }
 
     private RequestMappingInfo createApiVersionInfo(ApiVersion annotation, RequestCondition<?> customCondition) {
-        int value = annotation.value();
-        // Build the URL prefix
-        String[] patterns = {prefix + value};
-
         return new RequestMappingInfo(
-                new PatternsRequestCondition(patterns, getUrlPathHelper(), getPathMatcher(), useSuffixPatternMatch(), useTrailingSlashMatch(), getFileExtensions()),
+                new PatternsRequestCondition("v".concat(String.valueOf(annotation.value()))),
                 new RequestMethodsRequestCondition(),
                 new ParamsRequestCondition(),
                 new HeadersRequestCondition(),
