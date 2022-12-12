@@ -127,6 +127,13 @@
 			<version>${springfox.version}</version>
 		</dependency>
 
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>compile</scope>
+		</dependency>
+
 		<!-- MySQL JDBC -->
 		<dependency>
 			<groupId>mysql</groupId>
