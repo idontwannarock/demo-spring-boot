@@ -1,41 +1,34 @@
 package com.example.demospringboot.configuration;
 
-import com.example.demospringboot.security.SecurityConstants;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.Parameter;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+@RequiredArgsConstructor
 @EnableSwagger2
+@Configuration
 public class SwaggerConfiguration {
 
-    @Autowired
-    private BuildProperties buildProperties;
+    private final BuildProperties buildProperties;
 
     @Bean
     public Docket docket() {
-        List<Parameter> parameterList = new ArrayList<>();
-        parameterList.add(new ParameterBuilder().name(SecurityConstants.AUTHORIZATION_HEADER).description("Please enter JWT")
-                .modelRef(new ModelRef("string")).parameterType("header").required(false).build());
-
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(this.apiInfo())
-                .globalOperationParameters(parameterList)
+                .securityContexts(List.of(securityContext()))
+                .securitySchemes(List.of(apiKey()))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.example.demospringboot.controller"))
                 .paths(PathSelectors.any())
@@ -48,5 +41,21 @@ public class SwaggerConfiguration {
                 .contact(new Contact("Howard", "https://github.com/idontwannarock/demo-spring-boot", "idontwannarock@gmail.com"))
                 .version(buildProperties.getVersion())
                 .build();
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .build();
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        return List.of(new SecurityReference(
+                HttpHeaders.AUTHORIZATION,
+                new AuthorizationScope[] { new AuthorizationScope("global", "accessEverything") }));
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey(HttpHeaders.AUTHORIZATION, "JWT", "header");
     }
 }
