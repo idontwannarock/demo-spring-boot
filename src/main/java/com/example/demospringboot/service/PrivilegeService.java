@@ -31,7 +31,7 @@ public class PrivilegeService {
     }
 
     public List<PrivilegePayload> getAllPrivileges() {
-        return privilegeRepository.findAll(new Sort(Sort.Direction.ASC, "id"))
+        return privilegeRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(privilege -> PrivilegePayload.init().id(privilege.getId()).name(privilege.getName()).build())
                 .collect(Collectors.toList());

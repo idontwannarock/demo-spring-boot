@@ -38,7 +38,7 @@ public class RoleService {
     }
 
     public List<RolePayload> getAllRoles() {
-        return roleRepository.findAll(new Sort(Sort.Direction.ASC, "id"))
+        return roleRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(role -> RolePayload.init().id(role.getId()).name(role.getName()).build())
                 .collect(Collectors.toList());
