@@ -19,7 +19,7 @@
 		<java.version>11</java.version>
 
 		<mybatis-spring-boot-starter.version>3.0.0</mybatis-spring-boot-starter.version>
-		<jjwt.version>0.11.5</jjwt.version>
+		<jjwt.version>0.9.1</jjwt.version>
 		<guava.version>31.1-jre</guava.version>
 		<springfox.version>3.0.0</springfox.version>
 	</properties>
@@ -48,20 +48,19 @@
 		<!-- https://github.com/jwtk/jjwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
+			<artifactId>jjwt</artifactId>
 			<version>${jjwt.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>${jjwt.version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId>
-			<version>${jjwt.version}</version>
-			<scope>runtime</scope>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.14.1</version>
 		</dependency>
 
 		<!-- Guava -->

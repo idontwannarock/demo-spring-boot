@@ -2,7 +2,6 @@ package com.example.demospringboot.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 import java.util.Date;
 
@@ -19,7 +18,7 @@ public class JwtUtil {
                 .claim(PRIVILEGES, privilegesJson)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + EXPIRATION_TIME * 1000))
-                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS512)
+                .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();
     }
 }
