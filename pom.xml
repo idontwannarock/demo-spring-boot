@@ -24,7 +24,7 @@
 		<mybatis-spring-boot-starter.version>3.0.0</mybatis-spring-boot-starter.version>
 		<jjwt.version>0.9.1</jjwt.version>
 		<jackson-databind.version>2.14.1</jackson-databind.version>
-		<guava.version>31.1-jre</guava.version>
+		<guava.version>32.0.0-jre</guava.version>
 		<springfox.version>3.0.0</springfox.version>
 	</properties>
 
